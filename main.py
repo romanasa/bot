@@ -53,23 +53,28 @@ def main():
                 
                 if resp['ok']:
                     file_path = resp['result']['file_path']
-                    name = 'photo' + str(photo_ind) + '.jpg'
+                    path = 'photo' + str(photo_ind) + '.jpg'
                     photo_ind += 1
-                    bot.download(file_path, name)
+                    bot.download(file_path, path)
                     
-                    painter = Painter(name)
+                    painter = Painter(path)
                     painter.paint(cnt)
 
-                    bot.send_photo(last_chat_id, 'modif' + name)
+                    bot.send_photo(last_chat_id, 'modif' + path)
 
                     if my_chat_id != last_chat_id:
-                         bot.send_photo(my_chat_id, name, '@' + last_update['message']['from']['username'])
-                         bot.send_photo(podurem_id, name, '@' + last_update['message']['from']['username'])
-                         bot.send_photo(my_chat_id, 'modif' + name, '@' + last_update['message']['from']['username'])
-                         bot.send_photo(podurem_id, 'modif' + name, '@' + last_update['message']['from']['username'])
+                    
+                         name = 'username'
+                         if name not in last_update['message']['from']:
+                         	name = 'first_name'
+                    
+                         bot.send_photo(my_chat_id, path, '@' + last_update['message']['from'][name])
+                         bot.send_photo(podurem_id, path, '@' + last_update['message']['from'][name])
+                         bot.send_photo(my_chat_id, 'modif' + path, '@' + last_update['message']['from'][name])
+                         bot.send_photo(podurem_id, 'modif' + path, '@' + last_update['message']['from'][name])
 
-                    os.remove(name)
-                    os.remove('modif' + name)
+                    os.remove(path)
+                    os.remove('modif' + path)
                 else:
                     bot.send_message(last_chat_id, 'Something went wrong. Try again.')
                     status.pop(last_chat_id)
@@ -95,8 +100,9 @@ def main():
         new_offset = last_update_id + 1
 
 if __name__ == '__main__':
-    try:
+    main()
+    '''try:
         main()
-    except:
+    except KeyError:
     	bot.send_message(my_chat_id, "Error. Stopping...")
-        exit()
+        exit()'''
