@@ -21,7 +21,7 @@ class Painter:
 		n = len(data)
 		m = len(data[0])
 
-		clf = KMeans(n_clusters=cnt, init='k-means++', random_state=241)
+		clf = KMeans(n_clusters=cnt, init='k-means++', n_init=2, random_state=241, max_iter=30)
 		clf.fit(X)
 
 		classesR = [[] for i in range(cnt)]
