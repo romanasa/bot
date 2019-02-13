@@ -53,28 +53,32 @@ def main():
                 
                 if resp['ok']:
                     file_path = resp['result']['file_path']
-                    path = 'photo' + str(photo_ind) + '.jpg'
+                    file_extension = file_path[file_path.rfind('.'):]
+                    path = 'photo' + str(photo_ind) + file_extension
                     photo_ind += 1
+                    
+                    
                     bot.download(file_path, path)
                     
                     painter = Painter(path)
-                    painter.paint(cnt)
-
-                    bot.send_photo(last_chat_id, 'modif' + path)
-
-                    if my_chat_id != last_chat_id:
                     
-                         name = 'username'
-                         if name not in last_update['message']['from']:
-                         	name = 'first_name'
-                    
-                         bot.send_photo(my_chat_id, path, '@' + last_update['message']['from'][name])
-                         bot.send_photo(podurem_id, path, '@' + last_update['message']['from'][name])
-                         bot.send_photo(my_chat_id, 'modif' + path, '@' + last_update['message']['from'][name])
-                         bot.send_photo(podurem_id, 'modif' + path, '@' + last_update['message']['from'][name])
+                    try:
+                        painter.paint(cnt)
+                        bot.send_photo(last_chat_id, 'modif' + path)
 
+                        if my_chat_id != last_chat_id:
+                             name = 'username'
+                             if name not in last_update['message']['from']:
+                             	name = 'first_name'
+                        
+                             bot.send_photo(my_chat_id, path, '@' + last_update['message']['from'][name])
+                             bot.send_photo(podurem_id, path, '@' + last_update['message']['from'][name])
+                             bot.send_photo(my_chat_id, 'modif' + path, '@' + last_update['message']['from'][name])
+                             bot.send_photo(podurem_id, 'modif' + path, '@' + last_update['message']['from'][name])
+                        os.remove('modif' + path)
+                    except:
+                        bot.send_message(last_chat_id, 'Something went wrong. If you sent "png", try another format')
                     os.remove(path)
-                    os.remove('modif' + path)
                 else:
                     bot.send_message(last_chat_id, 'Something went wrong. Try again.')
                     status.pop(last_chat_id)
